@@ -3,8 +3,12 @@
 ## 测试
 
 ~~测试~~
+ 
+数学公式测试 $\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$
 
-数学公式测试 $$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+$$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+
+$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$
 
 > 引用测试
 
