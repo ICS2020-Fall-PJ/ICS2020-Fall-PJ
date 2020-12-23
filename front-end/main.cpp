@@ -986,7 +986,7 @@ namespace Init{
 		return isdigit(ch) ? ch - '0' : ch - 'a' + 10;
 	}
 	void fetch_bytes(){
-		char_t ch = '\0';
+		mxaddr = 0; char_t ch = '\0';
 		while (ch != EOF){
 			ch = gc(fin); 
 			while (ch != 'x' && ch != '|' && ch != EOF) ch = gc(fin);
@@ -1033,8 +1033,12 @@ namespace Y86_Call{
 		fin = fopen("test.in", "r"),
 		fout = fopen("test.out", "w"); 
 	}
+	void fill_memory(){
+		while (mxaddr < (addr_t)6 * 8) mem[mxaddr++] = 0;
+	}
 	void Y86_init(){
 		fetch_bytes();
+		fill_memory();
 	}
 	void Y86_run(){
 		cpu_start();
