@@ -1,5 +1,8 @@
 /*---size---*/
-
+.font-set{
+	font-family: Consolas;
+	font-size: 18px;
+}
 .m-padded-big {
     padding: 0.2em !important;
 }
@@ -44,23 +47,28 @@
 
 }
 
-.m-codesize {
-    width: 70px;
-    height: 206px;
-    overflow-y: auto;
-    box-sizing:border-box;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
-    *word-wrap: break-word;
-    *white-space : normal ;
-    font-weight: 300 !important;
-
+.m-line {
+    height: 50px !important;
 }
 
+.m-mini {
+    width: 40px !important;
+    height: 15px !important;
+}
+
+.m-codesize {
+    width: 700px;
+    height: 208px;
+    overflow-y: auto;
+    overflow-x: auto; 
+    white-space: nowrap;
+}
+.m-c{
+	padding-left: 25px !important;
+    padding-right: 25px !important;
+}
 .m-f {
-    width: 53px;
+    width: 83px;
 }
 
 .m-clk {
@@ -69,9 +77,7 @@
 
 /*---text---*/
 .m-text {
-    font-weight: 300 !important;
     letter-spacing: 1px !important;
-    font-weight: 300 !important;
 }
 .m-text-thin {
     font-weight: 300 !important;
@@ -105,7 +111,7 @@
     border-radius: 25px;
     width:100%;
     height: 4px;
-    background:#ffffff;
+    background:#f2fdf7;
     margin-top:12px ;
 }
 
@@ -140,7 +146,7 @@
     border-radius: 25px;
     width:100%;
     height: 4px;
-    background:#ffffff;
+    background:#f2fdf7;
     margin-top:12px ;
 }
 

@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
 
+#define Author Renatus_Goseqh
 #define Project Y86_Simulator
 
 #define rep(i, l, r) for (register int i = l; i <= r; i++)
 #define per(i, r, l) for (register int i = r; i >= l; i--)
 #define srep(i, l, r) for (register int i = l; i < r; i++)
 #define sper(i, r, l) for (register int i = r; i > l; i--)
-#define gc getchar
+#define gc fgetc
 using namespace std;
 
 namespace Define{
@@ -124,6 +125,8 @@ namespace Define{
 	typedef unsigned char hex_t;
 	typedef char char_t;
 	typedef bool bit_t;
+	
+	FILE *fin, *fout;
 }using namespace Define;
 
 namespace Toolkit{	
@@ -813,49 +816,97 @@ namespace Control{
 		}
 	}using namespace L_Stage;
 	
+	/*
 	namespace Debug{
 		void _F(){	
-			printf("F: predPC = 0x%llx\n", predPC);
+			fprintf(fout, "F: predPC = 0x%08x\n", predPC);
 		}
 		void _D(){
-			printf("D: instr = %s, rA = %s, rB = %s, valC = 0x%llx, valP = 0x%llx, Stat = %s\n", getIns(D_icode, D_ifun), getReg(D_rA), getReg(D_rB), D_valC, D_valP, getStat(D_stat));
+			fprintf(fout, "D: instr = %s, rA = %s, rB = %s, valC = 0x%08x, valP = 0x%08x, Stat = %s\n", getIns(D_icode, D_ifun), getReg(D_rA), getReg(D_rB), D_valC, D_valP, getStat(D_stat));
 		}
 		void _E(){	
-			printf("E: instr = %s, valC = 0x%llx, valA = 0x%llx, valB = 0x%llx\n   srcA = %s, srcB = %s, dstE = %s, dstM = %s, Stat = %s\n", getIns(E_icode, E_ifun), E_valC, E_valA, E_valB, getReg(E_srcA), getReg(E_srcB), getReg(E_dstE), getReg(E_dstM), getStat(E_stat));
+			fprintf(fout, "E: instr = %s, valC = 0x%08x, valA = 0x%08x, valB = 0x%08x\n   srcA = %s, srcB = %s, dstE = %s, dstM = %s, Stat = %s\n", getIns(E_icode, E_ifun), E_valC, E_valA, E_valB, getReg(E_srcA), getReg(E_srcB), getReg(E_dstE), getReg(E_dstM), getStat(E_stat));
 		}
 		void _M(){
-			printf("M: instr = %s, Cnd = %lld, valE = 0x%llx, valA = 0x%llx\n   dstE = %s, dstM = %s, Stat = %s\n", getIns(M_icode, M_ifun), M_Cnd, M_valE, M_valA, getReg(M_dstE), getReg(M_dstM), getStat(M_stat));
+			fprintf(fout, "M: instr = %s, Cnd = %lld, valE = 0x%08x, valA = 0x%08x\n   dstE = %s, dstM = %s, Stat = %s\n", getIns(M_icode, M_ifun), M_Cnd, M_valE, M_valA, getReg(M_dstE), getReg(M_dstM), getStat(M_stat));
 		}
 		void _W(){
-			printf("W: instr = %s, valE = 0x%llx, valM = 0x%llx, dstE = %s, dstM = %s, Stat = %s\n", getIns(W_icode, W_ifun), W_valE, W_valM, getReg(W_dstE), getReg(W_dstM), getStat(W_stat));
+			fprintf(fout, "W: instr = %s, valE = 0x%08x, valM = 0x%08x, dstE = %s, dstM = %s, Stat = %s\n", getIns(W_icode, W_ifun), W_valE, W_valM, getReg(W_dstE), getReg(W_dstM), getStat(W_stat));
 		}
 		void _L(){
-			printf("L: W_stall = 0x%llx, M_bubble = 0x%llx, set_cc = 0x%llx, E_bubble = 0x%llx, D_bubble = 0x%llx, D_stall = 0x%llx, F_stall = 0x%llx\n", W_stall, M_bubble, set_cc, E_bubble, D_bubble, D_stall, F_stall);
+			fprintf(fout, "L: W_stall = 0x%08x, M_bubble = 0x%08x, set_cc = 0x%08x, E_bubble = 0x%08x, D_bubble = 0x%08x, D_stall = 0x%08x, F_stall = 0x%08x\n", W_stall, M_bubble, set_cc, E_bubble, D_bubble, D_stall, F_stall);
 		}
 		void _Sys(){
-			printf("Cycle %lld. CC=Z=%d S=%d O=%d, Stat=%s\n", Cycle, ZF, SF, OF, getStat(Stat));
+			fprintf(fout, "Cycle %lld. CC=Z=%d S=%d O=%d, Stat=%s\n", Cycle, ZF, SF, OF, getStat(Stat));
 		}
 		void _SysSum(){
-			printf("Condition Code:\n");
-			printf("ZF: %d, SF: %d, OF: %d\n", ZF, SF, OF);
-			printf("\nRegister File:\n");
-			rep(i, 0, 14) printf("%s:\t0x%016llx\n", s_reg[i], reg[i]); 
-			printf("\nMemory:\n");
+			fprintf(fout, "Condition Code:\n");
+			fprintf(fout, "ZF: %d, SF: %d, OF: %d\n", ZF, SF, OF);
+			fprintf(fout, "\nRegister File:\n");
+			rep(i, 0, 14) fprintf(fout, "%s:\t0x%016llx\n", s_reg[i], reg[i]); 
+			fprintf(fout, "\nMemory:\n");
 			for (addr_t i = 0; i < mxaddr; i += 8){
-				printf("0x%03llx:\t0x", i);
+				fprintf(fout, "0x%03llx:\t0x", i);
 				for (addr_t j = i; j < min(mxaddr, i + 8); j++){
-					printf("%x%x", mem[j] >> 4, mem[j] & 0xf);
+					fprintf(fout, "%x%x", mem[j] >> 4, mem[j] & 0xf);
 				}
-				printf("\n");
+				fprintf(fout, "\n");
 			}
 		}
 		void _End(){
-			printf("	Fetch: f_pc = 0x%llx, imem_instr = %s, f_instr = %s\n\n", f_pc, getIns(f_icode, f_ifun), getIns(f_icode, f_ifun));
+			fprintf(fout, "	Fetch: f_pc = 0x%08x, imem_instr = %s, f_instr = %s\n\n", f_pc, getIns(f_icode, f_ifun), getIns(f_icode, f_ifun));
 		}
 		void _Header(){
-			printf("Y86-64 Processor\n\n");
+			fprintf(fout, "Y86-64 Processor\n\n");
 		}
 	}using namespace Debug;
+	*/
+	
+	namespace API{
+		void _F(){
+			fprintf(fout, "predPC 0x%08x\n", predPC);
+		}
+		void _D(){
+			fprintf(fout, "instr %s rA %s rB %s valC 0x%08x valP 0x%08x Stat %s\n", getIns(D_icode, D_ifun), getReg(D_rA), getReg(D_rB), D_valC, D_valP, getStat(D_stat));
+		}
+		void _E(){	
+			fprintf(fout, "instr %s valC 0x%08x valA 0x%08x valB 0x%08x\n   srcA %s srcB %s dstE %s dstM %s Stat %s\n", getIns(E_icode, E_ifun), E_valC, E_valA, E_valB, getReg(E_srcA), getReg(E_srcB), getReg(E_dstE), getReg(E_dstM), getStat(E_stat));
+		}
+		void _M(){
+			fprintf(fout, "instr %s Cnd %lld valE 0x%08x valA 0x%08x\n   dstE %s dstM %s Stat %s\n", getIns(M_icode, M_ifun), M_Cnd, M_valE, M_valA, getReg(M_dstE), getReg(M_dstM), getStat(M_stat));
+		}
+		void _W(){
+			fprintf(fout, "instr %s valE 0x%08x valM 0x%08x dstE %s dstM %s Stat %s\n", getIns(W_icode, W_ifun), W_valE, W_valM, getReg(W_dstE), getReg(W_dstM), getStat(W_stat));
+		}
+		void _L(){
+			fprintf(fout, "W_stall 0x%08x M_bubble 0x%08x set_cc 0x%08x E_bubble 0x%08x D_bubble 0x%08x D_stall 0x%08x F_stall 0x%08x\n", W_stall, M_bubble, set_cc, E_bubble, D_bubble, D_stall, F_stall);
+		}
+		void _Sys(){
+			//fprintf(fout, "Cycle %lld Z %d S %d O %d Stat %s\n", Cycle, ZF, SF, OF, getStat(Stat));
+			fprintf(fout, "Z %d S %d O %d\n", ZF, SF, OF);
+		}
+		void _SysSum(){
+			//fprintf(fout, "\n"); //fprintf(fout, "Condition Code:\n");  
+			//fprintf(fout, "ZF %d SF %d OF %d\n", ZF, SF, OF);
+			fprintf(fout, "\n"); //fprintf(fout, "\nRegister File:\n");
+			rep(i, 0, 7) fprintf(fout, "%s 0x%08x\n", s_reg[i], reg[i]); 
+			fprintf(fout, "\n"); //fprintf(fout, "\nMemory:\n");
+			addr_t _mxaddr = min(mxaddr, (addr_t)6 * 8);
+			for (addr_t i = 0; i < _mxaddr; i += 8){
+				fprintf(fout, "0x%03llx 0x", i);
+				for (addr_t j = i; j < min(_mxaddr, i + 8); j++){
+					fprintf(fout, "%x%x", mem[j] >> 4, mem[j] & 0xf);
+				}
+				fprintf(fout, "\n");
+			}
+		}
+		void _End(){
+			fprintf(fout, "\n"); //fprintf(fout, "	Fetch: f_pc = 0x%08x, imem_instr = %s, f_instr = %s\n\n", f_pc, getIns(f_icode, f_ifun), getIns(f_icode, f_ifun));
+		}
+		void _Header(){
+			fprintf(fout, "\n"); //fprintf(fout, "Y86-64 Processor\n\n");
+		}
+	}using namespace API;
 	
 }using namespace Control;
 
@@ -895,15 +946,16 @@ namespace CPU{
 	}
 	void cpu_print(){
 		_Sys();
+		_SysSum();
 		_F();
 		_D();
 		_E();
 		_M();
-		_W();
+		_W(); 
 		_End();
 	}
 	void cpu_final_print(){
-		_SysSum();
+		//_SysSum();
 	}
 	bool cpu_check(){
 		return Stat == AOK && Cycle < 1000;
@@ -936,29 +988,29 @@ namespace Init{
 	void fetch_bytes(){
 		char_t ch = '\0';
 		while (ch != EOF){
-			ch = gc(); 
-			while (ch != 'x' && ch != '|' && ch != EOF) ch = gc();
+			ch = gc(fin); 
+			while (ch != 'x' && ch != '|' && ch != EOF) ch = gc(fin);
 			if (ch == 'x') {
-				ch = gc(); 
-				while (!isxdigit(ch)) ch = gc();  
+				ch = gc(fin); 
+				while (!isxdigit(ch)) ch = gc(fin);  
 				addr_t addr = 0; 
 				while (isxdigit(ch)) {
 					addr = (addr << 4) + hex2int(ch);
-					ch = gc();
+					ch = gc(fin);
 				}
 				mxaddr = max(mxaddr, addr); 
-				while (!isxdigit(ch) && ch != '|') ch = gc();
+				while (!isxdigit(ch) && ch != '|') ch = gc(fin);
 				if (ch == '|') goto fail;
 				mem_t byte = 0; bit_t time_to_write_mem = 0;
 				while (isxdigit(ch)) {
 					byte = (byte << 4) + hex2int(ch);
-					ch = gc();
+					ch = gc(fin);
 					if (time_to_write_mem) mem[addr++] = byte;
 					time_to_write_mem ^= 1;
 				}
 				mxaddr = max(mxaddr, addr); 
 			}
-			fail: while (ch != '\n' && ch != EOF) ch = gc(); 
+			fail: while (ch != '\n' && ch != EOF) ch = gc(fin); 
 			if (ch == EOF) return; 
 		}
 		cerr << "ERROR: fetch bytes fails" << endl; 
@@ -968,7 +1020,7 @@ namespace Init{
 
 namespace Test{
 	void _memory(){
-		srep(i, 0, mxaddr) printf("%x%x", mem[i] >> 4, mem[i] & 15);
+		srep(i, 0, mxaddr) fprintf(fout, "%x%x", mem[i] >> 4, mem[i] & 15);
 	}
 	void _fetch_bytes(){
 		fetch_bytes();
@@ -977,6 +1029,10 @@ namespace Test{
 }
 
 namespace Y86_Call{
+	void file_init(){
+		fin = fopen("test.in", "r"),
+		fout = fopen("test.out", "w"); 
+	}
 	void Y86_init(){
 		fetch_bytes();
 	}
@@ -986,10 +1042,16 @@ namespace Y86_Call{
 	void Y86_end(){
 		return;
 	}
+	void file_end(){
+		fclose(fin), fclose(fout);
+		//delete fin, fout;
+	}
 	void Y86_play(){
+		file_init();
 		Y86_init();
 		Y86_run();
 		Y86_end();
+		file_end();
 	}
 }using namespace Y86_Call;
 
@@ -997,10 +1059,8 @@ namespace Y86_Call{
 //#define test main	// do you want to give a test? :)
 
 int Y86(){ 
-	freopen("input.yo", "r", stdin);
-	freopen("output.txt", "w", stdout);
+	cerr << "Hello World!" << endl;
 	Y86_play();
-	return 0;
 }
 
 int test(){
