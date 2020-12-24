@@ -1,3 +1,5 @@
 node_modules/
 
-front-end/*.json
+front-end/package-lock.json
+front-end/semantic.json
+front-end/package.json
